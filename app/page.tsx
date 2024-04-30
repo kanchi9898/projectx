@@ -1,5 +1,5 @@
 "use client"
-import { Datax, Location, datafilter, Discpline, Duration, Program, Price, Intake, Sort, addCommas } from "./List/Data";
+import { Datax, Location, datafilter, Discpline, Duration, Program, Price, Intake, Sort, addCommas, Allfilterdata } from "./List/Data";
 import { CiLocationOn, CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/Container";
@@ -17,6 +17,16 @@ import { IoMdClose } from "react-icons/io";
 import { AiOutlineDollar } from "react-icons/ai";
 import { GrNotes } from "react-icons/gr";
 import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
@@ -29,6 +39,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Menu from "@/components/ui/menu";
+import { useMediaQuery } from "@uidotdev/usehooks";
+import Maincard from "@/components/ui/maincard";
+import Card from "@/components/ui/Card";
 
 
 export default function Home() {
@@ -40,10 +53,23 @@ export default function Home() {
   const [secondDivHeight, setSecondDivHeight] = useState<number>(0);
   const secondDivRef = useRef<HTMLDivElement>(null);
   const [increase, setIncrease] = useState(false);
-
+  const [openReview, setopenReview] = useState(false);
+  const [openFilter, setopenfilter] = useState(false);
   const searchParams = useSearchParams()
   const pathName = usePathname()
   const router = useRouter();
+
+
+  const isMediumDevice = useMediaQuery(
+    "only screen and (min-width : 1013px)"
+  );
+
+  useEffect(() => {
+    if (isMediumDevice) {
+      setopenReview(false);
+    }
+  }, [isMediumDevice]);
+
 
 
   const [query, setQuery] = useState({
@@ -58,6 +84,7 @@ export default function Home() {
 
   useEffect(() => {
     const queryString = new URLSearchParams();
+
     Object.entries(query).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach(val => queryString.append(key, val));
@@ -65,6 +92,7 @@ export default function Home() {
         queryString.append(key, value);
       }
     });
+
     router.push(`${pathName}?${queryString.toString()}`);
 
     if (query.sort === Sort[0]) {
@@ -150,6 +178,14 @@ export default function Home() {
       duration: '',
       sort: ''
     });
+  }
+  const handle_currentdata = (id: number) => {
+    setCurrentindex(id)
+    if (isMediumDevice) {
+      setopenReview(false)
+    } else {
+      setopenReview(true)
+    }
   }
 
   // for mouse on click
@@ -356,7 +392,6 @@ export default function Home() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="h-full hidden sm:flex gap-1">Duration {
-
                     (query.duration.length > 0) && <GoDotFill size={15} className="text-blue" />
                   } <MdKeyboardArrowDown size={20} /></Button>
                 </DropdownMenuTrigger>
@@ -374,8 +409,37 @@ export default function Home() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="h-[7vh] bg-lightblue rounded">
-              <Button variant="outline" className="bg-transparent border-2 text-blue font-bold hover:bg-transparent h-[7vh] flex gap-3"><TbAdjustmentsHorizontal size={20} /> All Filter</Button>
+            <div className="bg-lightblue rounded">
+              <Sheet open={openFilter} onOpenChange={setopenfilter}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="bg-transparent border-2 text-blue font-bold hover:bg-transparent h-[7vh] flex gap-3" ><TbAdjustmentsHorizontal size={20} /> All Filter</Button>
+                </SheetTrigger>
+                <SheetContent className="bg-transparent border-none">
+                  <section className="right-0 bottom-0 md:top-0 w-full md:w-[600px] z-[9999] fixed h-[77vh] sm:h-[80vh] md:h-screen flex bg-fff flex-col">
+                    <div className="p-5 flex items-center justify-between font-semibold">
+                      <p>All filters</p>
+                      <span onClick={() => setopenfilter(false)}>
+                        <IoMdClose size={40} className="border-2 p-2 rounded cursor-pointer" />
+                      </span>
+                    </div>
+                    <div className="h-full w-full bg-fff right-0 flex flex-col sm:gap-5">
+                      <div className="border-t-[1px] border-r-[1px] border-l-[1px] rounded-lg">
+                        {
+                          Allfilterdata?.map((item: { name: string, icon: any }) => {
+                            return (
+                              <Menu name={item.name} icon={item.icon} />
+                            )
+                          })
+                        }
+                      </div>
+                      <div className="relative md:absolute md:bottom-2 border-t-2 border-balck w-full flex p-2 gap-3 pt-2">
+                        <Button className="flex-1 full text-black bg-lightblue  hover:bg-lightblue hover:shadow-md font-semibold">Clear All</Button>
+                        <Button className="flex-1 w-full bg-blue text-fff hover:bg-darkblue font-semibold">See Programs (10000)</Button>
+                      </div>
+                    </div>
+                  </section>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
 
@@ -484,134 +548,31 @@ export default function Home() {
       <hr className="mt-5" />
 
       <Container>
-        <div className="flex gap-5 w-full mt-5 flex-col-reverse lg:flex-row">
-          <div className="first-div flex-1 md:flex-[0.3] ">
+        <div className="gap-5 w-full mt-5 flex flex-col-reverse lg:flex-row">
+          <div className={`first-div flex-1 md:flex-[0.3] ${openReview ? "hidden" : "h-[80vh]"}`}>
             <div className="md:text-[2vw] lg:text-[1.5vw] font-medium h-[50px]">{FinalData.length} programs</div>
-
-            <div className={`flex flex-col gap-3 ${FinalData.length > 5 && "lg:overflow-y-scroll"}`} style={{ height: `${secondDivHeight - 50}px` }}>
+            <div className={`flex flex-col gap-3 ${FinalData.length > 5 && "overflow-y-scroll"}`} style={{ height: `${secondDivHeight - 50}px` }}>
               {
                 FinalData?.map((item, index: number) => {
-                  const { name, short_name, price, logo, program_level, duration, address } = item;
                   return (
-                    <div onClick={() => setCurrentindex(index)} key={index} className={`bg-fff p-5 rounded-[10px] flex flex-col gap-3 cursor-pointer border-[1px] ${currentIndex === index && "border-[3px] border-blue"}`}>
-                      <div className="flex items-center gap-5">
-                        <div className="h-[60px] w-[60px] rounded-[50%] bg-transparent border-[1px] overflow-hidden">
-                          <img className="h-full w-full object-contain" src={logo} alt="logo" />
-                        </div>
-                        <div>
-                          <h1 className="font-medium ">{name}</h1>
-                          <p className="text-zinc-400 md:text-[0.9vw]">{address}</p>
-                        </div>
-                      </div>
-                      <div>
-                        <h1 className="font-bold">{short_name}</h1>
-                      </div>
-                      <div className="flex gap-4">
-                        <h1 className="border-r-[1px] pr-4">{program_level}</h1>
-                        <p>{duration}</p>
-                      </div>
-                      <div className="md:text-[1.5vw] font-medium">
-                        ${addCommas(price ? price : 0)} USD / Year
-                      </div>
-                    </div>
+                    <Card handle_currentdata={() => handle_currentdata(index)} data={item} currentIndex={currentIndex} index={index} />
                   )
                 })
               }
-
-
             </div>
           </div>
 
-          <div ref={secondDivRef} className="second-div hidden md:block h-max flex-[0.7] rounded-[10px] overflow-hidden border-[1px] bg-fff">
-            <div className="h-[30vh]">
-              <img className="h-full w-full object-cover" src={FinalData[currentIndex]?.picture} alt="img" />
-            </div>
-            <div className="p-10 flex flex-col gap-10">
-              <div>
-                <h1 className="lg:text-[1.3vw] underline text-blue font-semibold mb-2">{FinalData[currentIndex]?.name}</h1>
-                <span className="flex items-center gap-2">
-                  <CiLocationOn size={30} />
-                  <p>{FinalData[currentIndex]?.address}</p>
-                </span>
+          <div ref={secondDivRef} className={`second-div ${openReview ? "block absolute top-0 left-0" : "hidden"} lg:block h-max flex-[0.7] rounded-[10px] overflow-hidden border-[1px] bg-fff`}>
+            {(openReview) &&
+              <div className="flex items-center justify-between p-5 fixed top-0 bg-fff w-full left-0">
+                <h1 className="font-semibold">Program Review</h1>
+                <Button variant="outline" onClick={() => setopenReview(false)}><IoMdClose /></Button>
               </div>
-
-              <div className="flex items-center gap-3">
-                <p className="sm:text-[2.5vw] lg:text-[1.6vw] underline text-blue font-semibold mb-2">{FinalData[currentIndex]?.course_name}</p>
-                <RxExternalLink size={25} className="text-blue cursor-pointer" />
-              </div>
-
-              <div>
-                <Button className="bg-blue text-fff font-medium">Check Eligibility Now</Button>
-              </div>
-              <div>
-                <h3 className="lg:text-[1.4vw] font-medium mb-4">Program Summary</h3>
-                <p className="text-zinc-400">{FinalData[currentIndex]?.summary}</p>
-                {increase && <p className="text-zinc-400">{FinalData[currentIndex]?.shortsummary}</p>}
-                <div className="w-full flex items-center justify-center mt-2">
-                  <Button className="bg-transparent text-black border-2 hover:bg-zinc-200 gap-3" onClick={() => setIncrease(!increase)}>{increase ? "Show Less" : "Show More"} <MdKeyboardArrowDown size={30} className={`${increase ? "rotate-[180deg]" : ""} transform duration-300 ease-linear `} /></Button>
-                </div>
-              </div>
-              <div className="border-2 rounded-[10px] p-5 grid grid-cols-2 gap-6">
-                <div className="flex gap-5">
-                  <PiCertificate size={50} className="text-blue" />
-                  <span>
-                    <h1 className="font-semibold">{FinalData[currentIndex]?.discipline}</h1>
-                    <p className="text-zinc-500">Program Level</p>
-                  </span>
-                </div>
-                <div className="flex gap-5">
-                  <IoCalendarOutline size={50} className="text-blue" />
-                  <span>
-                    <h1 className="font-semibold">{FinalData[currentIndex]?.duration}</h1>
-                    <p className="text-zinc-500">Program Length</p>
-                  </span>
-                </div>
-                <div className="flex gap-5">
-                  <FaSchoolFlag size={50} className="text-blue" />
-                  <span>
-                    <h1 className="font-semibold">${addCommas(FinalData[currentIndex]?.price)} / Year</h1>
-                    <p className="text-zinc-500">Tuition</p>
-                  </span>
-                </div>
-                <div className="flex gap-5">
-                  <FaHandHoldingUsd size={50} className="text-blue" />
-                  <span>
-                    <h1 className="font-semibold">${FinalData[currentIndex]?.fee}</h1>
-                    <p className="text-zinc-500">Application Fee</p>
-                  </span>
-                </div>
-                <div className="flex gap-5">
-                  <FaHouseUser size={50} className="text-blue" />
-                  <span>
-                    <h1 className="font-semibold">{FinalData[currentIndex]?.cost_of_living}</h1>
-                    <p className="text-zinc-500">Cost Of Living</p>
-                  </span>
-                </div>
-
-              </div>
-
-              <div>
-                <h1 className="font-semibold text-[1.4vw]">Admission Requirements</h1>
-              </div>
-
-              <div>
-                <h1 className="text-zinc-400 font-semibold">Academic Background
-                  Minimum Level of Education Completed
-                  Minimum GPA
-                </h1>
-              </div>
-              <div className="flex items-center justify-center">
-                <Button className="bg-lightblue hover:shadow-xl hover:bg-lightblue text-blue font-bold">Log in to View All Requirements</Button>
-              </div>
-            </div>
-
+            }
+            <Maincard data={FinalData[currentIndex]} increase={increase} setIncrease={() => setIncrease(!increase)} />
           </div>
         </div>
       </Container>
-
-      
-
-
     </main>
   );
 }

@@ -1,6 +1,64 @@
-import { IData } from "../type/type"
+import { MdLocationOn } from 'react-icons/md';
+import { LiaCertificateSolid } from "react-icons/lia";
+import { IoBookOutline } from "react-icons/io5";
+import { MdOutlineMonetizationOn } from "react-icons/md";
+import { FaCalendar } from "react-icons/fa";
+import { IoCalendarSharp } from "react-icons/io5";
+import { FaBuildingColumns } from "react-icons/fa6";
+import { FaBuildingUser } from "react-icons/fa6";
+import { BiSelectMultiple } from "react-icons/bi";
+import { GrScorecard } from "react-icons/gr";
+import { FaDollarSign } from "react-icons/fa";
 
-export const Data = [
+export const Allfilterdata=[
+    {
+        "name":"Location",
+        "icon": MdLocationOn
+    },
+    {
+        "name":"Program Level",
+        "icon": LiaCertificateSolid
+    },
+    {
+        "name":"Discipline",
+        "icon": IoBookOutline
+    },
+    {
+        "name":"Tuition (USD)",
+        "icon": MdOutlineMonetizationOn
+    },
+    {
+        "name":"Intake",
+        "icon": FaCalendar
+    },
+    {
+        "name":"Program Duration",
+        "icon": IoCalendarSharp
+    },
+    {
+        "name":"School",
+        "icon": FaBuildingColumns
+    },
+    {
+        "name":"Co-op and Internship",
+        "icon": FaBuildingUser
+    },
+    {
+        "name":"English Score",
+        "icon": BiSelectMultiple
+    },
+    {
+        "name":"GMAT / GRE Score",
+        "icon": GrScorecard
+    },
+    {
+        "name":"Application Fee",
+        "icon": FaDollarSign
+    },
+
+]
+
+export const Datax = [
     {
         "name": "New York Culinary Institute",
         "course_name": "Culinary Arts",
@@ -9,8 +67,8 @@ export const Data = [
         "duration": "1 years",
         "location": "USA",
         "address": "New York, USA",
-        "logo": "https://example.com/logo_nyci.png",
-        "picture": "https://example.com/picture_nyci.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161344/University-of-the-Philippines-Logo.png",
+        "picture": "https://th.bing.com/th/id/R.f1ff3a4db5de5bed7112258f6b90f01a?rik=eYLT%2bL4SFXE7fw&riu=http%3a%2f%2fupload.wikimedia.org%2fwikipedia%2fcommons%2f4%2f44%2fCardiff_University_main_building.jpg&ehk=8M7jOK5Ot3SN8AlrQbjoAm0ytdjaJwasY6FaHD6cULs%3d&risl=&pid=ImgRaw&r=0",
         "intake": ["Fall", "Spring"],
         "program_level": "Undergraduate",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -27,8 +85,8 @@ export const Data = [
         "duration": "2 years",
         "location": "Canada",
         "address": "Toronto, Canada",
-        "logo": "https://example.com/logo_tba.png",
-        "picture": "https://example.com/picture_tba.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161344/University-of-the-Philippines-Logo.png",
+        "picture": "https://th.bing.com/th/id/OIP.mvJWN9Qm4LWQZ659fGKGFgHaFj?w=640&h=480&rs=1&pid=ImgDetMain",
         "intake": ["Fall"],
         "program_level": "Certificate",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -45,8 +103,8 @@ export const Data = [
         "duration": "3 years",
         "location": "UK",
         "address": "London, UK",
-        "logo": "https://example.com/logo_lcms.png",
-        "picture": "https://example.com/picture_lcms.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161344/University-of-the-Philippines-Logo.png",
+        "picture": "https://www.timeshighereducation.com/student/sites/default/files/styles/default/public/2021-09/harvard-university-campus.jpg?itok=SK_1MUqi",
         "intake": ["Fall", "Spring"],
         "program_level": "Associate Degree",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -64,8 +122,8 @@ export const Data = [
         "duration": "2 years",
         "location": "Australia",
         "address": "Sydney, Australia",
-        "logo": "https://example.com/logo_scni.png",
-        "picture": "https://example.com/picture_scni.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161344/University-of-the-Philippines-Logo.png",
+        "picture": "https://www.timeshighereducation.com/student/sites/default/files/styles/default/public/2021-09/harvard-university-campus.jpg?itok=SK_1MUqi",
         "intake": ["Fall"],
         "program_level": "Diploma",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -83,8 +141,8 @@ export const Data = [
         "duration": "1 years",
         "location": "France",
         "address": "Paris, France",
-        "logo": "https://example.com/logo_pga.png",
-        "picture": "https://example.com/picture_pga.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161532/Chicago-University-Logo.png",
+        "picture": "https://www.timeshighereducation.com/student/sites/default/files/styles/default/public/2021-09/harvard-university-campus.jpg?itok=SK_1MUqi",
         "intake": ["Spring"],
         "program_level": "Bachelor's Degree",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -102,8 +160,8 @@ export const Data = [
         "duration": "3 years",
         "location": "Japan",
         "address": "Tokyo, Japan",
-        "logo": "https://example.com/logo_tsci.png",
-        "picture": "https://example.com/picture_tsci.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161532/Chicago-University-Logo.png",
+        "picture": "https://media.licdn.com/dms/image/C4D12AQHaevI3GHB0KA/article-cover_image-shrink_600_2000/0/1631959208239?e=2147483647&v=beta&t=g9B3rFYssfOKDSTU5qzcH0YevXEWknYVZaqMqUc73Bo",
         "intake": ["Fall"],
         "program_level": "Master's Degree",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -121,8 +179,8 @@ export const Data = [
         "duration": "4 years",
         "location": "USA",
         "address": "California, USA",
-        "logo": "https://example.com/logo_california.png",
-        "picture": "https://example.com/picture_california.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161532/Chicago-University-Logo.png",
+        "picture": "https://media.licdn.com/dms/image/C4D12AQHaevI3GHB0KA/article-cover_image-shrink_600_2000/0/1631959208239?e=2147483647&v=beta&t=g9B3rFYssfOKDSTU5qzcH0YevXEWknYVZaqMqUc73Bo",
         "intake": ["Fall"],
         "program_level": "Undergraduate",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -140,8 +198,8 @@ export const Data = [
         "duration": "4 years",
         "location": "Canada",
         "address": "Montreal, Canada",
-        "logo": "https://example.com/logo_mps.png",
-        "picture": "https://example.com/picture_mps.jpg",
+        "logo": "https://bcassetcdn.com/public/blog/wp-content/uploads/2022/05/11161532/Chicago-University-Logo.png",
+        "picture": "https://media.licdn.com/dms/image/C4D12AQHaevI3GHB0KA/article-cover_image-shrink_600_2000/0/1631959208239?e=2147483647&v=beta&t=g9B3rFYssfOKDSTU5qzcH0YevXEWknYVZaqMqUc73Bo",
         "intake": ["Spring"],
         "program_level": "Certificate",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -159,8 +217,8 @@ export const Data = [
         "duration": "2 years",
         "location": "UK",
         "address": "London, UK",
-        "logo": "https://example.com/logo_lcbs.png",
-        "picture": "https://example.com/picture_lcbs.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://media.licdn.com/dms/image/C4D12AQHaevI3GHB0KA/article-cover_image-shrink_600_2000/0/1631959208239?e=2147483647&v=beta&t=g9B3rFYssfOKDSTU5qzcH0YevXEWknYVZaqMqUc73Bo",
         "intake": ["Fall"],
         "program_level": "Diploma",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -178,8 +236,8 @@ export const Data = [
         "duration": "18 months",
         "location": "Australia",
         "address": "Melbourne, Australia",
-        "logo": "https://example.com/logo_mni.png",
-        "picture": "https://example.com/picture_mni.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://wenr.wes.org/wp-content/uploads/2019/09/iStock-1142918319_WENR_Ranking_740_430.jpg",
         "intake": ["Spring"],
         "program_level": "Bachelor's Degree",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -197,8 +255,8 @@ export const Data = [
         "duration": "18 months",
         "location": "France",
         "address": "Paris, France",
-        "logo": "https://example.com/logo_pgs.png",
-        "picture": "https://example.com/picture_pgs.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://media.licdn.com/dms/image/C4D12AQHaevI3GHB0KA/article-cover_image-shrink_600_2000/0/1631959208239?e=2147483647&v=beta&t=g9B3rFYssfOKDSTU5qzcH0YevXEWknYVZaqMqUc73Bo",
         "intake": ["Spring"],
         "program_level": "Master's Degree",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -216,8 +274,8 @@ export const Data = [
         "duration": "2 years",
         "location": "Japan",
         "address": "Osaka, Japan",
-        "logo": "https://example.com/logo_osca.png",
-        "picture": "https://example.com/picture_osca.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://wenr.wes.org/wp-content/uploads/2019/09/iStock-1142918319_WENR_Ranking_740_430.jpg",
         "intake": ["Fall", "Spring"],
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
 
@@ -235,8 +293,8 @@ export const Data = [
         "duration": "3 years",
         "location": "USA",
         "address": "Los Angeles, USA",
-        "logo": "https://example.com/logo_laci.png",
-        "picture": "https://example.com/picture_laci.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://wenr.wes.org/wp-content/uploads/2019/09/iStock-1142918319_WENR_Ranking_740_430.jpg",
         "intake": ["Fall"],
         "program_level": "Undergraduate",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -254,8 +312,8 @@ export const Data = [
         "duration": "1 years",
         "location": "Canada",
         "address": "Vancouver, Canada",
-        "logo": "https://example.com/logo_vbs.png",
-        "picture": "https://example.com/picture_vbs.jpg",
+        "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScBWCUOwPhLpjIZ5W1XHFI7AnaAw8c37SA2Kvu0IN2z-I6cKhyq8VsN-3hXhQjYmXqMYY&usqp=CAU",
+        "picture": "https://wenr.wes.org/wp-content/uploads/2019/09/iStock-1142918319_WENR_Ranking_740_430.jpg",
         "intake": ["Spring"],
         "program_level": "Diploma",
         "shortsummary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ut mauris odio. Cras quis nisi vitae magna convallis venenatis. Duis dictum ipsum nec odio tristique, nec rutrum lorem varius. Phasellus quis lacus ut metus",
@@ -265,13 +323,7 @@ export const Data = [
         "fee": 280
     }
 ]
-export const Datax = Data.map(entry => {
-    return {
-        ...entry,
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Harvard_University_coat_of_arms.svg/800px-Harvard_University_coat_of_arms.svg.png",
-        picture: "https://images.collegedunia.com/public/college_data/images/studyabroad/appImage/college_1090_29-15:00_o-HARVARD-UNIVERSITY-BUILDING-facebook.jpeg"
-    };
-});
+
 
 export const datafilter = [
     "Location",
@@ -315,6 +367,8 @@ export const Sort = [
     "Application fee (Low to High)",
     "Application fee (High to Low)",
 ]
+
+
 
 export function addCommas(number: number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
