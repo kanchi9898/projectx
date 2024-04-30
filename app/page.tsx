@@ -4,7 +4,6 @@ import { CiLocationOn, CiSearch } from "react-icons/ci";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/ui/Container";
 import React, { useEffect, useRef, useState } from "react";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
 import { FaHandHoldingUsd, FaHouseUser, FaSortAmountDown } from "react-icons/fa";
@@ -28,130 +27,132 @@ import {
   DropdownMenuRadioItem,
 
 } from "@/components/ui/dropdown-menu"
-
-type Checked = DropdownMenuCheckboxItemProps["checked"]
-
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Menu from "@/components/ui/menu";
 
 
 export default function Home() {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-  const [selectlocation, setSelectlocation] = useState<string[]>([])
-  const [selectprogram, setSelectprogram] = useState<string[]>([])
-  const [selectdiscipline, setSelectdiscipline] = useState<string[]>([])
-  const [selectIntake, setSelectIntake] = useState<string[]>([])
-  const [selectprice, setSelectprice] = useState<string[]>([])
-  const [duration, setduration] = useState("")
-  const [sort, setsort] = useState("")
   const [FinalData, setFinaldata] = useState<IData[]>(Datax)
+  const [currentIndex, setCurrentindex] = useState(0)
   const [isInputFocused, setInputFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [indexnum, setIndexnum] = useState(0)
   const [search, setSearch] = useState("Tech")
   const [secondDivHeight, setSecondDivHeight] = useState<number>(0);
   const secondDivRef = useRef<HTMLDivElement>(null);
+  const [increase, setIncrease] = useState(false);
 
-  const allData = [
-    ...selectlocation,
-    ...selectprogram,
-    ...selectdiscipline,
-    ...selectIntake,
-    ...selectprice,
-    duration
-  ];
+  const searchParams = useSearchParams()
+  const pathName = usePathname()
+  const router = useRouter();
 
-  //  Add duration in localstorage
-  const addsort = (item: string) => {
-    if (item) {
-      const store = localStorage.getItem("Sort")
-      setsort(item)
-      if (store) {
-        if (store === item) {
-          setsort("")
-          localStorage.removeItem('Sort');
-        } else {
-          localStorage.setItem("Sort", item)
-        }
+
+  const [query, setQuery] = useState({
+    location: searchParams.getAll('location') || [],
+    program_level: searchParams.getAll('program_level') || [],
+    discipline: searchParams.getAll('discipline') || [],
+    tuition_price: searchParams.getAll('tuition_price') || [],
+    intake: searchParams.getAll('intake') || [],
+    duration: searchParams.get('duration') || '',
+    sort: searchParams.get('sort') || '',
+  });
+
+  useEffect(() => {
+    const queryString = new URLSearchParams();
+    Object.entries(query).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach(val => queryString.append(key, val));
       } else {
-        localStorage.setItem("Sort", item)
+        queryString.append(key, value);
       }
-    }
+    });
+    router.push(`${pathName}?${queryString.toString()}`);
 
-    if (item === Sort[0]) {
+    if (query.sort === Sort[0]) {
       setFinaldata(Datax.sort((a, b) => a.price - b.price))
-    } else if (item === Sort[1]) {
+    } else if (query.sort === Sort[1]) {
       setFinaldata(Datax.sort((a, b) => b.price - a.price))
-    } else if (item === Sort[2]) {
+    } else if (query.sort === Sort[2]) {
       setFinaldata(Datax.sort((a, b) => a.fee - b.fee))
-    }
-    else if (item === Sort[3]) {
+    } else if (query.sort === Sort[3]) {
       setFinaldata(Datax.sort((a, b) => b.fee - a.fee))
     }
+  }, [query, router, pathName]);
 
+
+  // add & delete Functions
+  const handle_location = (item: string) => {
+    let updatedLocations = [...query.location];
+    if (updatedLocations.includes(item)) {
+      updatedLocations = updatedLocations.filter((i) => i !== item);
+    } else {
+      updatedLocations.push(item);
+    }
+    setQuery({ ...query, location: updatedLocations });
+  };
+  const handle_Program = (item: string) => {
+    let updatedLocations = [...query.program_level];
+    if (updatedLocations.includes(item)) {
+      updatedLocations = updatedLocations.filter((i) => i !== item);
+    } else {
+      updatedLocations.push(item);
+    }
+    setQuery({ ...query, program_level: updatedLocations });
+  };
+  const handle_discipline = (item: string) => {
+    let updatedLocations = [...query.discipline];
+    if (updatedLocations.includes(item)) {
+      updatedLocations = updatedLocations.filter((i) => i !== item);
+    } else {
+      updatedLocations.push(item);
+    }
+    setQuery({ ...query, discipline: updatedLocations });
+  };
+  const handle_tution_price = (item: string) => {
+    let updatedLocations = [...query.tuition_price];
+    if (updatedLocations.includes(item)) {
+      updatedLocations = updatedLocations.filter((i) => i !== item);
+    } else {
+      updatedLocations.push(item);
+    }
+    setQuery({ ...query, tuition_price: updatedLocations });
+  };
+  const handle_intake = (item: string) => {
+    let updatedLocations = [...query.intake];
+    if (updatedLocations.includes(item)) {
+      updatedLocations = updatedLocations.filter((i) => i !== item);
+    } else {
+      updatedLocations.push(item);
+    }
+    setQuery({ ...query, intake: updatedLocations });
+  };
+  const handle_duration = (item: string) => {
+    if (query.duration.length !== 0 && query.duration === item) {
+      setQuery({ ...query, duration: "" })
+    } else {
+      setQuery({ ...query, duration: item })
+    }
+  }
+  const handle_sort = (item: string) => {
+    if (query.sort.length !== 0 && query.sort === item) {
+      setQuery({ ...query, sort: "" })
+    } else {
+      setQuery({ ...query, sort: item })
+    }
+  }
+  const handle_reset = () => {
+    setFinaldata(Datax)
+    setQuery({
+      location: [],
+      program_level: [],
+      discipline: [],
+      tuition_price: [],
+      intake: [],
+      duration: '',
+      sort: ''
+    });
   }
 
-
-  useEffect(() => {
-    const lowercaseFilters = allData.map(item => item.toLowerCase());
-
-    const filteredData = Datax.filter(course =>
-      lowercaseFilters.includes(course.location.toLowerCase()) ||
-      lowercaseFilters.includes(course.duration.toLowerCase()) ||
-      lowercaseFilters.includes(course.discipline.toLowerCase()) ||
-      lowercaseFilters.includes(course.program_level.toLowerCase()) ||
-      course.intake.some(intake => lowercaseFilters.includes(intake.toLowerCase()))
-    );
-
-    // Check if the filteredData is different from FinalData before updating the state
-    if (JSON.stringify(filteredData) !== JSON.stringify(FinalData) && search.length <= 4) {
-      setFinaldata(filteredData?.length ? filteredData : Datax);
-
-    }
-
-  }, [allData, FinalData, Datax]);
-
-  useEffect(() => {
-    const storagedata = localStorage.getItem("Location")
-    if (storagedata) {
-      setSelectlocation(JSON.parse(storagedata))
-    }
-    const storagedataprogram = localStorage.getItem("Program")
-    if (storagedataprogram) {
-      setSelectprogram(JSON.parse(storagedataprogram))
-    }
-    const storagedatadiscipline = localStorage.getItem("Discipline")
-    if (storagedatadiscipline) {
-      setSelectdiscipline(JSON.parse(storagedatadiscipline))
-    }
-    const storagedataprice = localStorage.getItem("Price")
-    if (storagedataprice) {
-      setSelectprice(JSON.parse(storagedataprice))
-
-    }
-    const storageIntake = localStorage.getItem("Intake")
-    if (storageIntake) {
-      setSelectIntake(JSON.parse(storageIntake))
-    }
-    const storagetime = localStorage.getItem("Duration")
-    if (storagetime) {
-      setduration(storagetime)
-    }
-    const storagesort = localStorage.getItem("Sort")
-    if (storagesort) {
-      setsort(storagesort)
-      if (storagesort === Sort[0]) {
-        setFinaldata(Datax.sort((a, b) => a.price - b.price))
-      } else if (storagesort === Sort[1]) {
-        setFinaldata(Datax.sort((a, b) => b.price - a.price))
-      } else if (storagesort === Sort[2]) {
-        setFinaldata(Datax.sort((a, b) => a.fee - b.fee))
-      } else if (storagesort === Sort[3]) {
-        setFinaldata(Datax.sort((a, b) => b.fee - a.fee))
-      }
-    }
-  }, [])
-
-
-
+  // for mouse on click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
@@ -164,12 +165,13 @@ export default function Home() {
     };
   }, []);
 
+  // for screen height
   useEffect(() => {
     if (secondDivRef.current) {
       const height = secondDivRef.current.offsetHeight;
       setSecondDivHeight(height);
     }
-  }, []);
+  }, [increase]);
 
   // Search function
   const handlesearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -193,231 +195,32 @@ export default function Home() {
     }
   }
 
-  //  Add location in localstorage
-  const addlocation = (id: number) => {
-    if (id >= 0) {
-      const storelocation = localStorage.getItem("Location")
-      if (storelocation) {
-        const old_data = JSON.parse(storelocation)
-        if (old_data.includes(Location[id])) {
-          const newdata = old_data.filter((item: string, index: number) => item !== Location[id])
-          localStorage.setItem("Location", JSON.stringify(newdata))
-          setSelectlocation(newdata)
+  const allQueryValues = [
+    ...query.location,
+    ...query.program_level,
+    ...query.discipline,
+    ...query.tuition_price,
+    ...query.intake,
+    query.duration
+  ]
 
-        } else {
-          const new_data = [...old_data, Location[id]]
-          localStorage.setItem("Location", JSON.stringify(new_data))
-          setSelectlocation(new_data)
-        }
+  useEffect(() => {
+    const lowercaseFilters = allQueryValues.map(item => item.toLowerCase());
 
+    const filteredData = Datax.filter(course =>
+      lowercaseFilters.includes(course.location.toLowerCase()) ||
+      lowercaseFilters.includes(course.duration.toLowerCase()) ||
+      lowercaseFilters.includes(course.discipline.toLowerCase()) ||
+      lowercaseFilters.includes(course.program_level.toLowerCase()) ||
+      course.intake.some(intake => lowercaseFilters.includes(intake.toLowerCase()))
+    );
 
-      } else {
-        localStorage.setItem("Location", JSON.stringify([Location[id]]))
-        setSelectlocation([Location[id]])
-
-      }
+    // Check if the filteredData is different from FinalData before updating the state
+    if (JSON.stringify(filteredData) !== JSON.stringify(FinalData) && search.length <= 4) {
+      setFinaldata(filteredData?.length ? filteredData : Datax);
     }
-  }
-  //  delete location from localstorage
-  const handledeletelocation = (Item: string) => {
-    const storelocation = localStorage.getItem("Location")
-    if (storelocation) {
-      const old_data = JSON.parse(storelocation)
-      const newdata = old_data.filter((item: string, index: number) => item !== Item)
-      localStorage.setItem("Location", JSON.stringify(newdata))
-      setSelectlocation(newdata)
-    }
-  }
 
-  //  Add Program in localstorage
-  const addprogram = (id: number) => {
-    if (id >= 0) {
-      const storeprogram = localStorage.getItem("Program")
-      if (storeprogram) {
-        const old_data = JSON.parse(storeprogram)
-        if (old_data.includes(Program[id])) {
-          const newdata = old_data.filter((item: string, index: number) => item !== Program[id])
-          localStorage.setItem("Program", JSON.stringify(newdata))
-          setSelectprogram(newdata)
-
-        } else {
-          const new_data = [...old_data, Program[id]]
-          localStorage.setItem("Program", JSON.stringify(new_data))
-          setSelectprogram(new_data)
-        }
-
-
-      } else {
-        localStorage.setItem("Program", JSON.stringify([Program[id]]))
-        setSelectprogram([Program[id]])
-
-      }
-    }
-  }
-  //  delete program from localstorage
-  const handledeleteprogram = (Item: string) => {
-    const store = localStorage.getItem("Program")
-    if (store) {
-      const old_data = JSON.parse(store)
-      const newdata = old_data.filter((item: string, index: number) => item !== Item)
-      localStorage.setItem("Program", JSON.stringify(newdata))
-      setSelectprogram(newdata)
-    }
-  }
-
-  //  Add Discipline in localstorage
-  const adddiscipline = (id: number) => {
-    if (id >= 0) {
-      const storediscipline = localStorage.getItem("Discipline")
-      if (storediscipline) {
-        const old_data = JSON.parse(storediscipline)
-        if (old_data.includes(Discpline[id])) {
-          const newdata = old_data.filter((item: string, index: number) => item !== Discpline[id])
-          localStorage.setItem("Discipline", JSON.stringify(newdata))
-          setSelectdiscipline(newdata)
-
-        } else {
-          const new_data = [...old_data, Discpline[id]]
-          localStorage.setItem("Discipline", JSON.stringify(new_data))
-          setSelectdiscipline(new_data)
-        }
-
-
-      } else {
-        localStorage.setItem("Discipline", JSON.stringify([Discpline[id]]))
-        setSelectdiscipline([Discpline[id]])
-
-      }
-    }
-  }
-  //  delete discipline from localstorage
-  const handledeletediscipline = (Item: string) => {
-    const store = localStorage.getItem("Discipline")
-    if (store) {
-      const old_data = JSON.parse(store)
-      const newdata = old_data.filter((item: string, index: number) => item !== Item)
-      localStorage.setItem("Discipline", JSON.stringify(newdata))
-      setSelectdiscipline(newdata)
-    }
-  }
-
-  //  Add Price in localstorage
-  const addprice = (id: number) => {
-    if (id >= 0) {
-      const storePrice = localStorage.getItem("Price")
-      if (storePrice) {
-        const old_data = JSON.parse(storePrice)
-        if (old_data.includes(Price[id])) {
-          const newdata = old_data.filter((item: string, index: number) => item !== Price[id])
-          localStorage.setItem("Price", JSON.stringify(newdata))
-          setSelectprice(newdata)
-
-        } else {
-          const new_data = [...old_data, Price[id]]
-          localStorage.setItem("Price", JSON.stringify(new_data))
-          setSelectprice(new_data)
-        }
-
-
-      } else {
-        localStorage.setItem("Price", JSON.stringify([Price[id]]))
-        setSelectprice([Price[id]])
-
-      }
-    }
-  }
-  //  delete price from localstorage
-  const handledeleteprice = (Item: string) => {
-    const store = localStorage.getItem("Price")
-    if (store) {
-      const old_data = JSON.parse(store)
-      const newdata = old_data.filter((item: string, index: number) => item !== Item)
-      localStorage.setItem("Price", JSON.stringify(newdata))
-      setSelectprice(newdata)
-    }
-  }
-
-  //  Add Intake in localstorage
-  const addintake = (id: number) => {
-    if (id >= 0) {
-      const storeIntake = localStorage.getItem("Intake")
-      if (storeIntake) {
-        const old_data = JSON.parse(storeIntake)
-        if (old_data.includes(Intake[id])) {
-          const newdata = old_data.filter((item: string, index: number) => item !== Intake[id])
-          localStorage.setItem("Intake", JSON.stringify(newdata))
-          setSelectIntake(newdata)
-
-        } else {
-          const new_data = [...old_data, Intake[id]]
-          localStorage.setItem("Intake", JSON.stringify(new_data))
-          setSelectIntake(new_data)
-        }
-
-
-      } else {
-        localStorage.setItem("Intake", JSON.stringify([Intake[id]]))
-        setSelectIntake([Intake[id]])
-
-      }
-    }
-  }
-  //  delete intake from localstorage
-  const handledeleteintake = (Item: string) => {
-    const store = localStorage.getItem("Intake")
-    if (store) {
-      const old_data = JSON.parse(store)
-      const newdata = old_data.filter((item: string, index: number) => item !== Item)
-      localStorage.setItem("Intake", JSON.stringify(newdata))
-      setSelectIntake(newdata)
-    }
-  }
-
-  //  Add duration in localstorage
-  const addduration = (item: string) => {
-    if (item) {
-      const store = localStorage.getItem("Duration")
-      setduration(item)
-      if (store) {
-        if (store == item) {
-          setduration("")
-          localStorage.removeItem('Duration');
-        } else {
-          localStorage.setItem("Duration", item)
-        }
-      } else {
-        localStorage.setItem("Duration", item)
-      }
-
-
-    }
-  }
-
-
-  // delete duration
-  const handledeleteduration = () => {
-    setduration("")
-    localStorage.removeItem('Duration');
-  }
-  // reset
-  const handlereset = () => {
-    setduration("")
-    setsort("")
-    setSelectIntake([])
-    setSelectdiscipline([])
-    setSelectlocation([])
-    setSelectprice([])
-    setSelectprogram([])
-    setFinaldata(Datax)
-    localStorage.removeItem('Duration');
-    localStorage.removeItem('Location');
-    localStorage.removeItem('Program');
-    localStorage.removeItem('Price');
-    localStorage.removeItem('Intake');
-    localStorage.removeItem('Discipline');
-    localStorage.removeItem('Sort');
-
-  }
+  }, [allQueryValues, FinalData, Datax]);
 
 
   return (
@@ -438,97 +241,105 @@ export default function Home() {
                 return (
                   <DropdownMenu key={index}>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className={`h-full relative hidden lg:flex gap-2`}>{item} {
+                      <Button variant="outline" className={`h-full relative 
 
-                        (item == "Location" && selectlocation.length > 0) && <GoDotFill size={15} className="text-blue" />}
+                      ${(item === "Location") && "hidden xl:flex"
+                        }
+                      ${(item === "Program Levels") && "hidden xl:flex"
+                        }
+                      ${(item === "Discipline") && "hidden lg:flex"
+                        }
+                      ${(item === "Tuition Fee (USD)") && "hidden lg:flex"
+                        }
+                      ${(item === "Intake") && "hidden md:flex"
+                        }
+                      gap-1`}>{item}{
+                          (item == "Location" && query.location.length > 0) && <GoDotFill size={15} className="text-blue" />}
                         {
 
-                          (item == "Program Levels" && selectprogram.length > 0) && <GoDotFill size={15} className="text-blue" />
+                          (item == "Program Levels" && query.program_level.length > 0) && <GoDotFill size={15} className="text-blue" />
                         }
                         {
 
-                          (item == "Discipline" && selectdiscipline.length > 0) && <GoDotFill size={15} className="text-blue" />
+                          (item == "Discipline" && query.discipline.length > 0) && <GoDotFill size={15} className="text-blue" />
                         }
                         {
 
-                          (item == "Tuition Fee(USD)" && selectprice.length > 0) && <GoDotFill size={15} className="text-blue" />
+                          (item == "Tuition Fee (USD)" && query.tuition_price.length > 0) && <GoDotFill size={15} className="text-blue" />
                         }
                         {
 
-                          (item == "Intake" && selectIntake.length > 0) && <GoDotFill size={15} className="text-blue" />
+                          (item == "Intake" && query.intake.length > 0) && <GoDotFill size={15} className="text-blue" />
                         }
-
-
-
-                        <MdKeyboardArrowDown size={20} /></Button>
+                        <MdKeyboardArrowDown size={20} />
+                      </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className={`w-[21rem] h-max ${item == "Intake" && "w-[10rem]"} ${(item == "Location" || item == "Discipline") && "overflow-y-scroll h-[40vh]"}`}>
                       {item == "Location" &&
-                        Location?.map((i: any, id) => {
+                        Location?.map((item, index) => {
                           return (
                             <DropdownMenuCheckboxItem
-                              checked={selectlocation.includes(i)}
-                              onCheckedChange={setShowStatusBar}
-                              onClick={() => addlocation(id)}
+                              key={index}
+                              checked={query.location.includes(item)}
+                              onClick={() => handle_location(item)}
                             >
-                              {i}
+                              {item}
                             </DropdownMenuCheckboxItem>
                           )
                         })
                       }
                       {item == "Program Levels" &&
-                        Program?.map((i: any, id) => {
+                        Program?.map((item, idx) => {
                           return (
 
                             <DropdownMenuCheckboxItem
-                              checked={selectprogram.includes(i)}
-                              onCheckedChange={setShowStatusBar}
-                              onClick={() => addprogram(id)}
+                              key={idx}
+                              checked={query.program_level.includes(item)}
+                              onClick={() => handle_Program(item)}
                             >
-                              {i}
+                              {item}
                             </DropdownMenuCheckboxItem>
                           )
                         })
                       }
 
                       {item == "Discipline" &&
-                        Discpline?.map((i: any, id) => {
+                        Discpline?.map((item, idx) => {
                           return (
-
                             <DropdownMenuCheckboxItem
-                              checked={selectdiscipline.includes(i)}
-                              onCheckedChange={setShowStatusBar}
-                              onClick={() => adddiscipline(id)}
+                              key={idx}
+                              checked={query.discipline.includes(item)}
+                              onClick={() => handle_discipline(item)}
+
                             >
-                              {i}
+                              {item}
                             </DropdownMenuCheckboxItem>
                           )
                         })
                       }
                       {item == "Tuition Fee (USD)" &&
-                        Price?.map((i, id) => {
+                        Price?.map((item, idx) => {
                           return (
-
                             <DropdownMenuCheckboxItem
-                              checked={selectprice.includes(i)}
-                              onCheckedChange={setShowStatusBar}
-                              onClick={() => addprice(id)}
+                              key={idx}
+                              checked={query.tuition_price.includes(item)}
+                              onClick={() => handle_tution_price(item)}
                             >
-                              {i}
+                              {item}
                             </DropdownMenuCheckboxItem>
                           )
                         })
                       }
                       {item == "Intake" &&
-                        Intake?.map((i, id) => {
+                        Intake?.map((item, idx) => {
                           return (
 
                             <DropdownMenuCheckboxItem
-                              checked={selectIntake.includes(i)}
-                              onCheckedChange={setShowStatusBar}
-                              onClick={() => addintake(id)}
+                              key={idx}
+                              checked={query.intake.includes(item)}
+                              onClick={() => handle_intake(item)}
                             >
-                              {i}
+                              {item}
                             </DropdownMenuCheckboxItem>
                           )
                         })
@@ -544,21 +355,21 @@ export default function Home() {
             <div className="h-[7vh]">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="h-full">Duration {
-                    duration && <GoDotFill size={15} className="text-blue" />
+                  <Button variant="outline" className="h-full hidden sm:flex gap-1">Duration {
 
+                    (query.duration.length > 0) && <GoDotFill size={15} className="text-blue" />
                   } <MdKeyboardArrowDown size={20} /></Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                   <DropdownMenuLabel>Duration</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup value={duration}>
+                  <DropdownMenuRadioGroup value={query.duration}>
                     {
                       Duration?.map((item, index) => (
-                        <DropdownMenuRadioItem value={item} key={index} className="text-[1.2vw] cursor-pointer" onClick={() => addduration(item)}>{item}</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value={item} key={index} className="md:text-[1.2vw] cursor-pointer" onClick={() => handle_duration(item)}
+                        >{item}</DropdownMenuRadioItem>
                       ))
                     }
-
                   </DropdownMenuRadioGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -566,21 +377,19 @@ export default function Home() {
             <div className="h-[7vh] bg-lightblue rounded">
               <Button variant="outline" className="bg-transparent border-2 text-blue font-bold hover:bg-transparent h-[7vh] flex gap-3"><TbAdjustmentsHorizontal size={20} /> All Filter</Button>
             </div>
-
-
           </div>
 
           <div className="h-[7vh]">
             <DropdownMenu >
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-full flex gap-2">Sort <GoDotFill size={15} className="text-blue" /> <FaSortAmountDown size={17} /></Button>
+                <Button variant="outline" className="h-full flex gap-2">Sort {query.sort.length > 0 && <GoDotFill size={15} className="text-blue" />} <FaSortAmountDown size={17} /></Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-[24rem]">
                 <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup value={sort}>
+                <DropdownMenuRadioGroup value={query.sort}>
                   {
                     Sort?.map((item, index) => (
-                      <DropdownMenuRadioItem value={item} key={index} className="text-[1.2vw] cursor-pointer flex gap-2" onClick={() => addsort(item)}>
+                      <DropdownMenuRadioItem value={item} key={index} className="md:text-[1.2vw] cursor-pointer flex gap-2" onClick={() => handle_sort(item)}>
                         {
                           item == Sort[0] || item == Sort[1] ?
                             <AiOutlineDollar size={25} /> :
@@ -599,75 +408,75 @@ export default function Home() {
 
         </div>
 
-        {(selectlocation.length > 0 ||
-          selectprogram.length > 0 ||
-          selectIntake.length > 0 ||
-          selectprice.length > 0 ||
-          duration.length > 0 ||
-          selectdiscipline.length > 0) &&
+        {(query.location.length > 0 ||
+          query.program_level.length > 0 ||
+          query.intake.length > 0 ||
+          query.tuition_price.length > 0 ||
+          query.duration.length > 0 ||
+          query.discipline.length > 0) &&
           <div className="flex gap-3 my-5 flex-wrap">
 
             {
-              selectlocation?.map((item, index) => {
+              query.location?.map((item, index) => {
                 return (
                   <div key={index} className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
                     <span>{item}</span>
-                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeletelocation(item)} />
+                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handle_location(item)} />
                   </div>
                 )
               })
             }
             {
-              selectprogram?.map((item, index) => {
+              query.program_level?.map((item, index) => {
                 return (
                   <div key={index} className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
                     <span>{item}</span>
-                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeleteprogram(item)} />
+                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handle_Program(item)} />
                   </div>
                 )
               })
             }
             {
-              selectdiscipline?.map((item, index) => {
+              query.discipline?.map((item: string, index) => {
                 return (
                   <div key={index} className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
                     <span>{item}</span>
-                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeletediscipline(item)} />
+                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handle_discipline(item)} />
                   </div>
                 )
               })
             }
             {
-              selectprice?.map((item, index) => {
+              query.tuition_price?.map((item: string, index) => {
                 return (
                   <div key={index} className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
                     <span>{item}</span>
-                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeleteprice(item)} />
+                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handle_tution_price(item)} />
                   </div>
                 )
               })
             }
             {
-              selectIntake?.map((item, index) => {
+              query.intake?.map((item: string, index) => {
                 return (
                   <div key={index} className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
                     <span>{item}</span>
-                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeleteintake(item)} />
+                    <IoMdClose size={20} className="cursor-pointer" onClick={() => handle_intake(item)} />
                   </div>
                 )
               })
             }
             {
-              duration.length > 0 &&
+              query.duration.length > 0 &&
               <div className="flex items-center gap-2 bg-fff p-2 rounded-lg w-max border-[1px]">
-                <span>{duration}</span>
-                <IoMdClose size={20} className="cursor-pointer" onClick={() => handledeleteduration()} />
+                <span>{query.duration}</span>
+                <IoMdClose size={20} className="cursor-pointer" onClick={() => setQuery({ ...query, duration: "" })} />
               </div>
 
             }
             {
-              allData?.length > 2 &&
-              <Button className="bg-blue hover:bg-darkblue" onClick={handlereset}>Clear all</Button>
+              allQueryValues?.length > 2 &&
+              <Button className="bg-blue hover:bg-darkblue" onClick={() => handle_reset()}>Clear all</Button>
             }
           </div>}
 
@@ -675,23 +484,23 @@ export default function Home() {
       <hr className="mt-5" />
 
       <Container>
-        <div className="flex gap-8 w-full mt-5">
-          <div className="first-div flex-[0.3]">
-            <div className="text-[1.5vw] font-medium h-[50px]">{FinalData.length} programs</div>
+        <div className="flex gap-5 w-full mt-5 flex-col-reverse lg:flex-row">
+          <div className="first-div flex-1 md:flex-[0.3] ">
+            <div className="md:text-[2vw] lg:text-[1.5vw] font-medium h-[50px]">{FinalData.length} programs</div>
 
-            <div className={`flex flex-col gap-3 ${FinalData.length > 5 && "overflow-y-scroll"}`} style={{ height: `${secondDivHeight - 50}px` }}>
+            <div className={`flex flex-col gap-3 ${FinalData.length > 5 && "lg:overflow-y-scroll"}`} style={{ height: `${secondDivHeight - 50}px` }}>
               {
                 FinalData?.map((item, index: number) => {
                   const { name, short_name, price, logo, program_level, duration, address } = item;
                   return (
-                    <div key={index} onClick={() => setIndexnum(index)} className={`bg-fff p-5 rounded-[10px] flex flex-col gap-3 cursor-pointer border-[1px] ${indexnum === index ? "border-[2px] border-blue" : ""}`}>
+                    <div onClick={() => setCurrentindex(index)} key={index} className={`bg-fff p-5 rounded-[10px] flex flex-col gap-3 cursor-pointer border-[1px] ${currentIndex === index && "border-[3px] border-blue"}`}>
                       <div className="flex items-center gap-5">
                         <div className="h-[60px] w-[60px] rounded-[50%] bg-transparent border-[1px] overflow-hidden">
                           <img className="h-full w-full object-contain" src={logo} alt="logo" />
                         </div>
                         <div>
-                          <h1 className="font-medium">{name}</h1>
-                          <p className="text-zinc-400 text-[0.9vw]">{address}</p>
+                          <h1 className="font-medium ">{name}</h1>
+                          <p className="text-zinc-400 md:text-[0.9vw]">{address}</p>
                         </div>
                       </div>
                       <div>
@@ -701,7 +510,7 @@ export default function Home() {
                         <h1 className="border-r-[1px] pr-4">{program_level}</h1>
                         <p>{duration}</p>
                       </div>
-                      <div className="text-[1.5vw] font-medium">
+                      <div className="md:text-[1.5vw] font-medium">
                         ${addCommas(price ? price : 0)} USD / Year
                       </div>
                     </div>
@@ -713,21 +522,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div ref={secondDivRef} className="second-div h-max flex-[0.7] rounded-[10px] overflow-hidden border-[1px] bg-fff">
+          <div ref={secondDivRef} className="second-div hidden md:block h-max flex-[0.7] rounded-[10px] overflow-hidden border-[1px] bg-fff">
             <div className="h-[30vh]">
-              <img className="h-full w-full object-cover" src={FinalData[indexnum]?.picture} alt="img" />
+              <img className="h-full w-full object-cover" src={FinalData[currentIndex]?.picture} alt="img" />
             </div>
             <div className="p-10 flex flex-col gap-10">
               <div>
-                <h1 className="text-[1.3vw] underline text-blue font-semibold mb-2">{FinalData[indexnum]?.name}</h1>
+                <h1 className="lg:text-[1.3vw] underline text-blue font-semibold mb-2">{FinalData[currentIndex]?.name}</h1>
                 <span className="flex items-center gap-2">
                   <CiLocationOn size={30} />
-                  <p>{FinalData[indexnum]?.address}</p>
+                  <p>{FinalData[currentIndex]?.address}</p>
                 </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <p className="text-[1.6vw] underline text-blue font-semibold mb-2">{FinalData[indexnum]?.course_name}</p>
+                <p className="sm:text-[2.5vw] lg:text-[1.6vw] underline text-blue font-semibold mb-2">{FinalData[currentIndex]?.course_name}</p>
                 <RxExternalLink size={25} className="text-blue cursor-pointer" />
               </div>
 
@@ -735,45 +544,46 @@ export default function Home() {
                 <Button className="bg-blue text-fff font-medium">Check Eligibility Now</Button>
               </div>
               <div>
-                <h3 className="text-[1.4vw] font-medium mb-4">Program Summary</h3>
-                <p className="text-zinc-400">{FinalData[indexnum]?.summary}</p>
+                <h3 className="lg:text-[1.4vw] font-medium mb-4">Program Summary</h3>
+                <p className="text-zinc-400">{FinalData[currentIndex]?.summary}</p>
+                {increase && <p className="text-zinc-400">{FinalData[currentIndex]?.shortsummary}</p>}
                 <div className="w-full flex items-center justify-center mt-2">
-                  <Button className="bg-transparent text-black border-2 hover:bg-zinc-200 gap-3">Show Less <MdKeyboardArrowDown size={30} className="rotate-[180deg]" /></Button>
+                  <Button className="bg-transparent text-black border-2 hover:bg-zinc-200 gap-3" onClick={() => setIncrease(!increase)}>{increase ? "Show Less" : "Show More"} <MdKeyboardArrowDown size={30} className={`${increase ? "rotate-[180deg]" : ""} transform duration-300 ease-linear `} /></Button>
                 </div>
               </div>
               <div className="border-2 rounded-[10px] p-5 grid grid-cols-2 gap-6">
                 <div className="flex gap-5">
                   <PiCertificate size={50} className="text-blue" />
                   <span>
-                    <h1 className="font-semibold">{FinalData[indexnum]?.program_level}</h1>
+                    <h1 className="font-semibold">{FinalData[currentIndex]?.discipline}</h1>
                     <p className="text-zinc-500">Program Level</p>
                   </span>
                 </div>
                 <div className="flex gap-5">
                   <IoCalendarOutline size={50} className="text-blue" />
                   <span>
-                    <h1 className="font-semibold">{FinalData[indexnum]?.duration}</h1>
+                    <h1 className="font-semibold">{FinalData[currentIndex]?.duration}</h1>
                     <p className="text-zinc-500">Program Length</p>
                   </span>
                 </div>
                 <div className="flex gap-5">
                   <FaSchoolFlag size={50} className="text-blue" />
                   <span>
-                    <h1 className="font-semibold">${addCommas(FinalData[indexnum]?.price ? FinalData[indexnum]?.price : 0)} / Year</h1>
+                    <h1 className="font-semibold">${addCommas(FinalData[currentIndex]?.price)} / Year</h1>
                     <p className="text-zinc-500">Tuition</p>
                   </span>
                 </div>
                 <div className="flex gap-5">
                   <FaHandHoldingUsd size={50} className="text-blue" />
                   <span>
-                    <h1 className="font-semibold">${FinalData[indexnum]?.fee}</h1>
+                    <h1 className="font-semibold">${FinalData[currentIndex]?.fee}</h1>
                     <p className="text-zinc-500">Application Fee</p>
                   </span>
                 </div>
                 <div className="flex gap-5">
                   <FaHouseUser size={50} className="text-blue" />
                   <span>
-                    <h1 className="font-semibold">{FinalData[indexnum]?.cost_of_living}</h1>
+                    <h1 className="font-semibold">{FinalData[currentIndex]?.cost_of_living}</h1>
                     <p className="text-zinc-500">Cost Of Living</p>
                   </span>
                 </div>
@@ -798,6 +608,8 @@ export default function Home() {
           </div>
         </div>
       </Container>
+
+      
 
 
     </main>

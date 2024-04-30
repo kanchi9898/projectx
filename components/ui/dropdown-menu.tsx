@@ -113,7 +113,6 @@ const DropdownMenuCheckboxItem = React.forwardRef<
     </span>
     <span className="text-[1.2vw] flex items-center justify-between w-full p-2 cursor-pointer">
       {children}
-      <MdKeyboardArrowDown size={25} className="rotate-[270deg]"/>
     </span>
   </DropdownMenuPrimitive.CheckboxItem>
 ))

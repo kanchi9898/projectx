@@ -14,5 +14,5 @@ export type IData = {
     cost_of_living?: string
     fee?: number
     address?: string
-    shortsummery?: string
+    shortsummary?: string
   }
